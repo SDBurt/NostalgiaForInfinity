@@ -14,11 +14,9 @@ services:
       - "./configs:/freqtrade/configs"
       - "./${FREQTRADE__STRATEGY:-NostalgiaForInfinityX5}.py:/freqtrade/${FREQTRADE__STRATEGY:-NostalgiaForInfinityX5}.py"
     ports:
-      - "${FREQTRADE__API_SERVER__LISTEN_PORT:-8080}:${FREQTRADE__API_SERVER__LISTEN_PORT:-8080}"
+      - "127.0.0.1:${FREQTRADE__API_SERVER__LISTEN_PORT:-8080}:${FREQTRADE__API_SERVER__LISTEN_PORT:-8080}"
     # Default command used when running `docker compose up`
-    env_file:
-      - path: .env
-        required: false # default true
+    env_file: .env
     command: >
       trade
       --db-url sqlite:////freqtrade/user_data/${FREQTRADE__BOT_NAME:-Example_Test_Account}_${FREQTRADE__EXCHANGE__NAME:-binance}_${FREQTRADE__TRADING_MODE:-futures}-tradesv3.sqlite
@@ -34,3 +32,11 @@ services:
         "while true; do sleep 86400; docker restart ${FREQTRADE__BOT_NAME:-Example_Test_Account}_${FREQTRADE__EXCHANGE__NAME:-binance}_${FREQTRADE__TRADING_MODE:-futures}-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX5}; done",
       ]
     restart: unless-stopped
+
+  exchange-proxy:
+    image: mikekonan/exchange-proxy:latest-arm64
+    restart: unless-stopped
+    command: -verbose 1
+    container_name: kucoin-proxy
+    ports:
+      - "127.0.0.1:8080:8080"

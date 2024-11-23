@@ -6,19 +6,19 @@
 
 ### Simple script that does the following:
 ## 1. Pulls latest NFI Repo
-## 2. Copies updated NFIX sxtrategy file to Freqtrade
+## 2. Copies updated NFIX strategy file to Freqtrade
 ## 3. Optionally Commits the update strategy to a local repo
 ## 4. Stops, Build, and Start freqtrader via docker-compose
 
 NFI_REPO_HOME=/root/freqtrade/NostalgiaForInfinity
 FREQTRADE_HOME=/root/freqtrade/freqtrade-docker/ft_userdata
-COMMIT_TO_LOCAL_REPO=true
+COMMIT_TO_LOCAL_REPO=false
 
 #pull latest NFIX strategy and copy to freqtrade
 echo "updating NFO Strategy"
 cd $NFI_REPO_HOME
 git pull
-cp NostalgiaForInfinityX.py $FREQTRADE_HOME/user_data/strategies
+cp NostalgiaForInfinityX5.py $FREQTRADE_HOME/user_data/strategies
 echo "copied NFI Strategy to freqtrader"
 
 #optionally add the update strategy file to your own repo
@@ -32,7 +32,7 @@ if [ "$COMMIT_TO_LOCAL_REPO" = true ] ; then
 
     #commit update strategy file to local repo
     cd $FREQTRADE_HOME/user_data/strategies
-    git add NostalgiaForInfinityX.py
+    git add NostalgiaForInfinityX5.py
     git commit -m "updated nfix strategy"
     git push
 
@@ -40,6 +40,7 @@ fi
 
 #build and start via docker compose
 echo "Starting freqtrade with NFIX"
-docker-compose stop
-docker-compose build
-docker-compose up -d
+docker compose stop
+docker compose build
+docker compose up -d
+
